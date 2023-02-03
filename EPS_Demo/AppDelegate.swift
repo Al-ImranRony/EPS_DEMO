@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  EPS_Demo
 //
-//  Created by Bitmorpher 4 on 2/3/23.
+//  Created by iMrn on 2/3/23.
 //
 
 import UIKit
@@ -10,13 +10,24 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        makeAPICall {
+            ShopViewsConfig.shared.shopName =  APIManager.shared.shopSummary?.shopName
+        }
         return true
     }
 
+    func makeAPICall(completion: @escaping() -> Void) {
+        APIManager.shared.callShopAPI(withCompletion: { [weak self] (shopSummary) in
+            APIManager.shared.shopSummary = shopSummary
+            
+        })
+        APIManager.shared.callOrderAPI { [weak self] (orderList) in
+            APIManager.shared.orderList = orderList
+        }
+    }
+    
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
